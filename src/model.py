@@ -21,10 +21,10 @@ def lotka_volterra(t: float, state: List[float], alpha: float, beta: float, gamm
     dy_dt = delta * x * y - gamma * y
     return [dx_dt, dy_dt]
  
-def simulate_model(params: tuple, initial_conditions, t_obs):
+def simulate_model(params: tuple, init_cond, t_obs):
     '''
     Solve the Lotka-Volterra equations with params using a numerical integrator (return simulated x and y populations)
     '''
     alpha, beta, gamma, delta = params
-    sol = solve_ivp(lotka_volterra, (t_obs[0], t_obs[-1]), initial_conditions, args=(alpha, beta, gamma, delta), t_eval= t_obs)
+    sol = solve_ivp(lotka_volterra, (t_obs[0], t_obs[-1]), init_cond, args = (alpha, beta, gamma, delta), t_eval= t_obs)
     return sol.y
