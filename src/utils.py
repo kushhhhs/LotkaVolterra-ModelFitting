@@ -13,10 +13,10 @@ def load_data(file_path):
 
 def plot_diffs(t_obs, x_obs, y_obs, x_simulated, y_simulated):
     
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(10, 10))
 
     # Plotting the differences between observed and simulated values for prey population
-    plt.subplot(1, 2, 1)
+    plt.subplot(2, 1, 1)
     plt.plot(t_obs, x_obs, label = "Observed Prey Population", linestyle='--', marker='o')       
     plt.plot(t_obs, x_simulated, label = "Simulated Prey Population")
     plt.xlabel("Time")
@@ -24,7 +24,7 @@ def plot_diffs(t_obs, x_obs, y_obs, x_simulated, y_simulated):
     plt.legend()
 
     # Plotting the differences between observed and simulated values for predator population
-    plt.subplot(1, 2, 2)
+    plt.subplot(2, 1, 2)
     plt.plot(t_obs, y_obs, label="Observed Predator Population", linestyle='--', marker='o')
     plt.plot(t_obs, y_simulated, label="Simulated Predator Population")
     plt.xlabel("Time")
