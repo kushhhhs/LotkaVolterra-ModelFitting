@@ -1,0 +1,7 @@
+LICENSE
+README.md
+setup.py
+lotkavolterra.egg-info/PKG-INFO
+lotkavolterra.egg-info/SOURCES.txt
+lotkavolterra.egg-info/dependency_links.txt
+lotkavolterra.egg-info/top_level.txt
