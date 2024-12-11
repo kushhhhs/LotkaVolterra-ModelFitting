@@ -33,16 +33,31 @@ def compute_mape(params, t_obs, init_cond, x_obs, y_obs):
 
     return (x_mape+ y_mape)/2
 
-def local_optimization(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
+def local_optimization_RMSE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    Hill climbing to find optimized parameters by finding local minimum error based on initial conditions
+    Hill climbing to find optimized parameters by finding local minimum error (RMSE) based on initial conditions 
     '''
     result = minimize(compute_combined_rmse, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='Nelder-Mead')
     return result.x
 
-def global_optimization(bounds, t_obs, init_cond, x_obs, y_obs):
+def local_optimization_MAPE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    Simulated annealing to find optimized parameters by finding global minimum error
+    Hill climbing to find optimized parameters by finding local minimum error (MAPE) based on initial conditions
+    '''
+    result = minimize(compute_mape, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='Nelder-Mead')
+    return result.x
+
+def global_optimization_RMSE(bounds, t_obs, init_cond, x_obs, y_obs):
+    '''
+    Simulated annealing to find optimized parameters by finding global minimum error (RMSE)
     '''
     result = dual_annealing(compute_combined_rmse, bounds, args=(t_obs, init_cond, x_obs, y_obs))
     return result.x
+
+def global_optimization_MAPE(bounds, t_obs, init_cond, x_obs, y_obs):
+    '''
+    Simulated annealing to find optimized parameters by finding global minimum error (MAPE)
+    '''
+    result = dual_annealing(compute_mape, bounds, args=(t_obs, init_cond, x_obs, y_obs))
+    return result.x
+
