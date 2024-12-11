@@ -3,6 +3,7 @@ Optimization Methods will have methods for parameter optimization
 '''
 import numpy as np
 from src.model import simulate_model
+from scipy.optimize import minimize, dual_annealing
 
 def compute_combined_rmse(params: tuple, t_obs: np.ndarray, init_cond: list, x_obs: np.ndarray, y_obs: np.ndarray)-> float:
     '''
@@ -34,13 +35,14 @@ def compute_mape(params, t_obs, init_cond, x_obs, y_obs):
 
 def local_optimization(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    Function to perform local optimization havent figured this out yet
+    Hill climbing to find optimized parameters by finding local minimum error based on initial conditions
     '''
+    result = minimize(compute_combined_rmse, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='Nelder-Mead')
+    return result.x
 
-    return 0
-
-def global_optimization():
+def global_optimization(bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    Global optimization (Simulated annealing to find out optimized parameters)
+    Simulated annealing to find optimized parameters by finding global minimum error
     '''
-    return 0
+    result = dual_annealing(compute_combined_rmse, bounds, args=(t_obs, init_cond, x_obs, y_obs))
+    return result.x
