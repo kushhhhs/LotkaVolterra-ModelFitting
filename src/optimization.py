@@ -37,14 +37,14 @@ def compute_mape(params, t_obs, init_cond, x_obs, y_obs):
 
 def local_optimization_RMSE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    Hill climbing to find optimized parameters by finding local minimum error (RMSE) based on initial conditions 
+    L-BFGS-B method to find optimized parameters by finding local minimum error (RMSE) based on initial conditions 
     '''
     result = minimize(compute_combined_rmse, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='L-BFGS-B')
     return result.x
 
 def local_optimization_MAPE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    Hill climbing to find optimized parameters by finding local minimum error (MAPE) based on initial conditions
+    L-BFGS-B method to find optimized parameters by finding local minimum error (MAPE) based on initial conditions
     '''
     result = minimize(compute_mape, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='L-BFGS-B')
     return result.x
