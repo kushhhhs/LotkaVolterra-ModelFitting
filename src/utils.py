@@ -38,7 +38,7 @@ def plot_sims(t, x, y):
     plt.figure(figsize=(10,6))
 
     plt.scatter(t, x, color='blue', label='Prey Population (x)', marker='o')
-    plt.scatter(t, x, color='red', label='Predator Population (x)', marker='o')
+    plt.scatter(t, y, color='red', label='Predator Population (y)', marker='o')
 
     plt.xlabel(' Time ')
     plt.ylabel(' Population')
