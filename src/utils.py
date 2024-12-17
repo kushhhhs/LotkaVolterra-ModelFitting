@@ -53,3 +53,25 @@ def plot_sims(t, x, y):
     plt.ylabel(' Population')
     plt.legend()
     plt.show()
+    
+def plot_diffs_subplot(ax1, ax2, method, t_obs, x_obs, y_obs, x_simulated, y_simulated):
+    yellow = '#FFD700'
+    purple = '#9370DB'
+
+    # Plotting the differences between observed and simulated values for prey population
+    ax1.plot(t_obs, x_obs, color=purple, label="Observed Prey Population", 
+            linestyle='--', marker='o')       
+    ax1.plot(t_obs, x_simulated, color=yellow, label="Simulated Prey Population")
+    ax1.set_xlabel("Time")
+    ax1.set_ylabel("Prey Population")
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+
+    # Plotting the differences between observed and simulated values for predator population
+    ax2.plot(t_obs, y_obs, color=purple, label="Observed Predator Population", 
+            linestyle='--', marker='o')
+    ax2.plot(t_obs, y_simulated, color=yellow, label="Simulated Predator Population")
+    ax2.set_xlabel("Time")
+    ax2.set_ylabel("Predator Population")
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
