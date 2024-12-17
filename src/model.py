@@ -2,8 +2,8 @@
 Lotka-Volterra Equations and Solver 
 '''
 from typing import List, Union
-from scipy.integrate import solve_ivp
-def lotka_volterra(t: float, state: List[float], alpha: float, beta: float, gamma: float, delta: float)-> List[float]:
+from scipy.integrate import odeint
+def lotka_volterra(state, t, alpha: float, beta: float, gamma: float, delta: float):
     '''
     Function to compute the derivatives od the Lotka-Volterra model 
     Args:
@@ -26,5 +26,5 @@ def simulate_model(params: tuple, init_cond, t_obs):
     Solve the Lotka-Volterra equations with params using a numerical integrator (return simulated x and y populations)
     '''
     alpha, beta, gamma, delta = params
-    sol = solve_ivp(lotka_volterra, (t_obs[0], t_obs[-1]), init_cond, args = (alpha, beta, gamma, delta), t_eval= t_obs)
-    return sol.y
+    sol = odeint(lotka_volterra, init_cond, t_obs, args=(alpha, beta, gamma, delta))
+    return sol[:, 0], sol[:, 1]
