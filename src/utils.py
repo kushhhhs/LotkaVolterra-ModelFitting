@@ -75,3 +75,44 @@ def plot_diffs_subplot(ax1, ax2, method, t_obs, x_obs, y_obs, x_simulated, y_sim
     ax2.set_ylabel("Predator Population")
     ax2.legend()
     ax2.grid(True, alpha=0.3)
+    
+def plot_statistical_results(results):
+    """
+    Plot results with confidence intervals for each parameter
+    
+    Args:
+        results: Dictionary containing:
+            - 'prey_fixed': {'means': array, 'confs': array}
+            - 'pred_fixed': {'means': array, 'confs': array}
+            - 'num_deletions': list of deletion counts
+    """
+    param_names = ['α', 'β', 'γ', 'δ']
+    num_deletions = results['num_deletions']
+    
+    plt.figure(figsize=(15, 10))
+    for i, param in enumerate(param_names):
+        plt.subplot(2, 2, i+1)
+        
+        # Plot prey fixed results
+        means_prey = results['prey_fixed']['means'][:, i]
+        confs_prey = results['prey_fixed']['confs'][:, i]
+        plt.fill_between(num_deletions, means_prey - confs_prey, means_prey + confs_prey, 
+                        color='#FFD700', alpha=0.2)
+        plt.plot(num_deletions, means_prey, 'o-', color='#FFD700', 
+                label='Prey Fixed')
+        
+        # Plot predator fixed results
+        means_pred = results['pred_fixed']['means'][:, i]
+        confs_pred = results['pred_fixed']['confs'][:, i]
+        plt.fill_between(num_deletions, means_pred - confs_pred, means_pred + confs_pred, 
+                        color='#9370DB', alpha=0.2)
+        plt.plot(num_deletions, means_pred, 'o-', color='#9370DB', 
+                label='Predator Fixed')
+        
+        plt.xlabel('Points Removed')
+        plt.ylabel(f'Parameter {param}')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.show()
