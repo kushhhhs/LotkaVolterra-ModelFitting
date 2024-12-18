@@ -4,8 +4,8 @@ from src.optimization import local_optimization_RMSE, local_optimization_MAPE, g
 
 init_cond = [x_obs[0], y_obs[0]]
 
-init_guess = (1.0, 0.5, 1.5, 1.0)
-#init_guess = (1.0, 1.1, 1.7, 1.4)
+#init_guess = (1.0, 0.5, 1.5, 1.0) #This guess was found using global optimization methtod to improve Nelder-Mead method. 
+init_guess = (1.7, 0.8, 1.4, 0.6) # This is a 'best initial guess' using previous biology/predator-prey knowledge.
 bounds = [(0, 2), (0, 2), (0, 2), (0, 2)]
 
 optimized_params_local_RMSE = local_optimization_RMSE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs)
@@ -29,4 +29,4 @@ plot_diffs(method, t_obs, x_obs, y_obs, sim_data_local_MAPE[0], sim_data_local_M
 print(optimized_params_local_MAPE)
 method = "Simulated Annealing (MAPE)"
 plot_diffs(method, t_obs, x_obs, y_obs, sim_data_global_MAPE[0], sim_data_global_MAPE[1])
-print(optimized_params_global_MAPE)
+print(optimized_params_global_MAPE) 
