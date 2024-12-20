@@ -5,7 +5,13 @@ import numpy as np
 from src.model import simulate_model
 from scipy.optimize import minimize, dual_annealing
 from joblib import Parallel, delayed
-from pandas import pd
+import pandas as pd
+from joblib import Parallel, delayed
+from scipy.stats import t
+from typing import Dict, List, Tuple
+from datetime import datetime
+
+
 
 def compute_combined_rmse(params: tuple, t_obs: np.ndarray, init_cond: list, x_obs: np.ndarray, y_obs: np.ndarray)-> float:
     '''
@@ -64,16 +70,7 @@ def global_optimization_MAPE(bounds, t_obs, init_cond, x_obs, y_obs):
     '''
     result = dual_annealing(compute_mape, bounds, args=(t_obs, init_cond, x_obs, y_obs), seed=50)
     return result.x
-
 #-------------------------------------------------------------------------------------------------------------------- Testing Optimization Functions 
-import numpy as np
-from joblib import Parallel, delayed
-from scipy.stats import t
-from typing import Dict, List, Tuple
-import time
-from datetime import datetime, timedelta
-
-
 def calc_mean_conf(params: np.ndarray, confidence_level: float = 0.95) -> Tuple[np.ndarray, np.ndarray]:
     """
     Calculate mean and confidence intervals for parameters
@@ -211,3 +208,67 @@ def optimization_with_deletion(t_data: np.ndarray, X_data: np.ndarray, Y_data: n
     print(results_df.to_string(index=False))
     
     return mean_params, conf_params, results_df
+
+def optimization_with_combined_deletion(t_data: np.ndarray, X_data: np.ndarray, Y_data: np.ndarray,
+                                      init_cond: List[float], num_deletions: List[int], 
+                                      bounds: List[Tuple[float, float]], n_trials: int = 10):
+    """
+    Calculate optimal parameters when deleting points from both time series
+    """
+    mean_params = np.zeros((len(num_deletions), 4))
+    conf_params = np.zeros((len(num_deletions), 4))
+    
+    print("\nStarting combined deletion analysis...")
+    
+    for i, deletions in enumerate(num_deletions):
+        print(f"\nScenario {i+1}/{len(num_deletions)}: Removing {deletions} points from each time series...")
+        
+        # Generate different deletion indices for each time series
+        np.random.seed(i * 100)  # Seed for prey deletions
+        prey_delete_indices = np.random.choice(range(1, len(X_data)), size=deletions, replace=False)
+        
+        np.random.seed(i * 100 + 50)  # Different seed for predator deletions
+        pred_delete_indices = np.random.choice(range(1, len(Y_data)), size=deletions, replace=False)
+        
+        # Create masks
+        prey_mask = np.ones(len(t_data), dtype=bool)
+        pred_mask = np.ones(len(t_data), dtype=bool)
+        prey_mask[prey_delete_indices] = False
+        pred_mask[pred_delete_indices] = False
+        
+        # Combined mask (keep points present in both series)
+        combined_mask = prey_mask & pred_mask
+        
+        # Create reduced datasets
+        t_reduced = t_data[combined_mask]
+        X_reduced = X_data[combined_mask]
+        Y_reduced = Y_data[combined_mask]
+        
+        print(f"Points remaining: {np.sum(combined_mask)}")
+            
+        # Run parallel optimizations
+        deletion_params = Parallel(n_jobs=-1, verbose=10)(
+            delayed(run_single_trial)(
+                (i * 100) + seed,
+                t_reduced,
+                X_reduced,
+                Y_reduced,
+                init_cond,
+                bounds
+            ) for seed in range(n_trials)
+        )
+        
+        # Calculate statistics
+        deletion_params = np.array(deletion_params)
+        means, confs = calc_mean_conf(deletion_params)
+        
+        mean_params[i, :] = means
+        conf_params[i, :] = confs
+        
+        print(f"\nOptimized parameters:")
+        param_names = ['α', 'β', 'γ', 'δ']
+        for j, param in enumerate(param_names):
+            print(f"- {param}: {means[j]:.4f} ± {confs[j]:.4f}")
+    
+    return mean_params, conf_params
+
