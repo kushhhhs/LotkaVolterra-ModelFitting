@@ -21,8 +21,6 @@ def compute_combined_rmse(params: tuple, t_obs: np.ndarray, init_cond: list, x_o
     params (tuple): Model parameters (alpha, beta, gamma, delta)
     '''
     x_simulated, y_simulated = simulate_model(params, init_cond, t_obs)
-
-    #print(t_obs.shape, x_simulated.shape, y_simulated.shape)
     
     x_error = (x_simulated - x_obs) ** 2
     y_error = (y_simulated - y_obs) ** 2
@@ -41,20 +39,20 @@ def compute_mape(params, t_obs, init_cond, x_obs, y_obs):
     x_mape = np.mean(np.abs((x_obs - x_simulated)/ x_obs)) * 100
     y_mape = np.mean(np.abs((y_obs - y_simulated)/ y_obs)) * 100
 
-    return (x_mape+ y_mape)/2
+    return (x_mape+y_mape)/2
 
 def local_optimization_RMSE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    L-BFGS-B method to find optimized parameters by finding local minimum error (RMSE) based on initial conditions 
+    Nelder-Mead method to find optimized parameters by finding local minimum error (RMSE) based on initial conditions 
     '''
-    result = minimize(compute_combined_rmse, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='L-BFGS-B')
+    result = minimize(compute_combined_rmse, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='Nelder-Mead')
     return result.x
 
 def local_optimization_MAPE(init_guess, bounds, t_obs, init_cond, x_obs, y_obs):
     '''
-    L-BFGS-B method to find optimized parameters by finding local minimum error (MAPE) based on initial conditions
+    Nelder-Mead method to find optimized parameters by finding local minimum error (MAPE) based on initial conditions
     '''
-    result = minimize(compute_mape, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='L-BFGS-B')
+    result = minimize(compute_mape, init_guess, args=(t_obs, init_cond, x_obs, y_obs), bounds=bounds, method='Nelder-Mead')
     return result.x
 
 def global_optimization_RMSE(bounds, t_obs, init_cond, x_obs, y_obs):

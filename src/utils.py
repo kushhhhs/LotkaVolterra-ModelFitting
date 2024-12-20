@@ -14,35 +14,10 @@ def load_data(file_path):
     return t_obs, x_obs, y_obs
 
 def plot_diffs(method, t_obs, x_obs, y_obs, x_simulated, y_simulated):
-    
+
     yellow = '#FFD700'
     purple = '#9370DB'
 
-    # Detailed R-squared calculation with print statements
-    print(f"\nDetailed R² calculation for {method}:")
-    
-    # Prey R² calculation
-    ss_res_x = np.sum((x_obs - x_simulated) ** 2)
-    ss_tot_x = np.sum((x_obs - np.mean(x_obs)) ** 2)
-    r2_x = 1 - ss_res_x / ss_tot_x
-    
-    print("\nPrey:")
-    print(f"Sum of squared residuals (ss_res_x): {ss_res_x}")
-    print(f"Total sum of squares (ss_tot_x): {ss_tot_x}")
-    print(f"Mean of observed prey: {np.mean(x_obs)}")
-    print(f"R² calculation: 1 - {ss_res_x} / {ss_tot_x} = {r2_x}")
-
-    # Predator R² calculation
-    ss_res_y = np.sum((y_obs - y_simulated) ** 2)
-    ss_tot_y = np.sum((y_obs - np.mean(y_obs)) ** 2)
-    r2_y = 1 - ss_res_y / ss_tot_y
-    
-    print("\nPredator:")
-    print(f"Sum of squared residuals (ss_res_y): {ss_res_y}")
-    print(f"Total sum of squares (ss_tot_y): {ss_tot_y}")
-    print(f"Mean of observed predator: {np.mean(y_obs)}")
-    print(f"R² calculation: 1 - {ss_res_y} / {ss_tot_y} = {r2_y}")
-    
     # Calculate R-squared for both predator and prey
     ss_res_x = np.sum((x_obs - x_simulated) ** 2)
     ss_tot_x = np.sum((x_obs - np.mean(x_obs)) ** 2)
@@ -193,7 +168,7 @@ def plot_deletion_results(num_deletions, mean_params, conf_params, baseline_para
     titles = ['Parameter ' + param for param in param_names]
     
     fig, axes = plt.subplots(2, 2, figsize=(15, 10))
-    fig.suptitle(f'Optimized Parameters for {deletion_type} data deletion', fontsize=12)
+    fig.suptitle(f'Optimized Parameters for {deletion_type} data deletion', fontsize=16)
     axes = axes.ravel()
     
     print("Baseline parameters:")
@@ -223,8 +198,8 @@ def plot_deletion_results(num_deletions, mean_params, conf_params, baseline_para
                    capsize=3, capthick=1, elinewidth=1, zorder=2,
                    markersize=8, markeredgewidth=1.5)
         
-        ax.set_xlabel('Number of deleted points', fontsize=10)
-        ax.set_ylabel(f'Parameter {param}', fontsize=10)
+        ax.set_xlabel('Number of deleted points', fontsize=15)
+        ax.set_ylabel(f'Parameter {param}', fontsize=15)
         
         ax.legend(loc='best', framealpha=0.9, fontsize=9)
         
